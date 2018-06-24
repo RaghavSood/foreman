@@ -21,6 +21,15 @@ func runClient() {
 	defer client.Close()
 
 	logVersion()
+
+	info, err := client.AllProcessInfo()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Fatal("Error")
+	}
+
+	log.Info(info)
 }
 
 func stopProcess(name string) error {

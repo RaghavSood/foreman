@@ -81,6 +81,16 @@ func (client Client) RestartProcess(name string, wait bool) (result bool, err er
 	return
 }
 
+func (client Client) ProcessInfo(name string) (info ProcessInfo, err error) {
+	err = client.RpcClient.Call("supervisor.getProcessInfo", name, &info)
+	return
+}
+
+func (client Client) AllProcessInfo() (info []ProcessInfo, err error) {
+	err = client.RpcClient.Call("supervisor.getAllProcessInfo", nil, &info)
+	return
+}
+
 func xmlrpcParams(params ...interface{}) []interface{} {
 	var interfaceSlice []interface{} = make([]interface{}, len(params))
 	for i, v := range params {
