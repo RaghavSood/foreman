@@ -72,6 +72,17 @@ func (client Client) StopProcess(name string, wait bool) (result bool, err error
 	return
 }
 
+func (client Client) RestartProcess(name string, wait bool) (result bool, err error) {
+	params := xmlrpcParams(name, wait)
+	err = client.RpcClient.Call("supervisor.stopProcess", params, &result)
+	if err != nil {
+		return
+	}
+	params = xmlrpcParams(name, wait)
+	err = client.RpcClient.Call("supervisor.startProcess", params, &result)
+	return
+}
+
 func xmlrpcParams(params ...interface{}) []interface{} {
 	var interfaceSlice []interface{} = make([]interface{}, len(params))
 	for i, v := range params {

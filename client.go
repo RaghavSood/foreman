@@ -21,7 +21,6 @@ func runClient() {
 	defer client.Close()
 
 	logVersion()
-
 }
 
 func stopProcess(name string) error {
@@ -38,6 +37,18 @@ func stopProcess(name string) error {
 
 func startProcess(name string) error {
 	result, err := client.StartProcess(name, true)
+	if err != nil {
+		return err
+	}
+
+	log.WithFields(log.Fields{
+		"result": result,
+	}).Info("Stopped process")
+	return nil
+}
+
+func restartProcess(name string) error {
+	result, err := client.RestartProcess(name, true)
 	if err != nil {
 		return err
 	}
