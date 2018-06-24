@@ -73,13 +73,11 @@ func (client Client) StopProcess(name string, wait bool) (result bool, err error
 }
 
 func (client Client) RestartProcess(name string, wait bool) (result bool, err error) {
-	params := xmlrpcParams(name, wait)
-	err = client.RpcClient.Call("supervisor.stopProcess", params, &result)
+	result, err = client.StopProcess(name, wait)
 	if err != nil {
 		return
 	}
-	params = xmlrpcParams(name, wait)
-	err = client.RpcClient.Call("supervisor.startProcess", params, &result)
+	result, err = client.StartProcess(name, wait)
 	return
 }
 
