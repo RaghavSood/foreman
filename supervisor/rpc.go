@@ -50,7 +50,32 @@ func (client Client) APIVersion() (version string, err error) {
 	return
 }
 
+func (client Client) PID() (pid int64, err error) {
+	err = client.RpcClient.Call("supervisor.getPID", nil, &pid)
+	return
+}
+
 func (client Client) ID() (id string, err error) {
 	err = client.RpcClient.Call("supervisor.getIdentification", nil, &id)
 	return
+}
+
+func (client Client) StartProcess(name string, wait bool) (result bool, err error) {
+	params := xmlrpcParams(name, wait)
+	err = client.RpcClient.Call("supervisor.startProcess", params, &result)
+	return
+}
+
+func (client Client) StopProcess(name string, wait bool) (result bool, err error) {
+	params := xmlrpcParams(name, wait)
+	err = client.RpcClient.Call("supervisor.stopProcess", params, &result)
+	return
+}
+
+func xmlrpcParams(params ...interface{}) []interface{} {
+	var interfaceSlice []interface{} = make([]interface{}, len(params))
+	for i, v := range params {
+		interfaceSlice[i] = v
+	}
+	return interfaceSlice
 }

@@ -21,6 +21,31 @@ func runClient() {
 	defer client.Close()
 
 	logVersion()
+
+}
+
+func stopProcess(name string) error {
+	result, err := client.StopProcess(name, true)
+	if err != nil {
+		return err
+	}
+
+	log.WithFields(log.Fields{
+		"result": result,
+	}).Info("Stopped process")
+	return nil
+}
+
+func startProcess(name string) error {
+	result, err := client.StartProcess(name, true)
+	if err != nil {
+		return err
+	}
+
+	log.WithFields(log.Fields{
+		"result": result,
+	}).Info("Stopped process")
+	return nil
 }
 
 func logVersion() {
@@ -38,8 +63,24 @@ func logVersion() {
 		}).Fatal("Error")
 	}
 
+	id, err := client.ID()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Fatal("Error")
+	}
+
+	pid, err := client.PID()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Fatal("Error")
+	}
+
 	log.WithFields(log.Fields{
 		"version": v,
 		"api":     apiV,
+		"id":      id,
+		"pid":     pid,
 	}).Info("Supervisor connected")
 }
